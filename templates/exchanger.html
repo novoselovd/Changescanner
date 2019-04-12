@@ -1,0 +1,202 @@
+<!-- login.html-->
+{% extends "base.html" %}
+{% import "wtf.html" as wtf %}
+
+{% block title %}ChangeScanner - {{ ex_data[0] }}{% endblock %}
+
+{% block style %}
+<style>
+.container .img{
+    text-align:center;
+}
+.container .details{
+    border-left:3px solid #ded4da;
+}
+.container .details p{
+    font-size:15px;
+    font-weight:bold;
+}
+{#.emp-profile {#}
+{#    padding: 3%;#}
+{#    margin-top: 3%;#}
+{#    margin-bottom: 3%;#}
+{#    border-radius: 0.5rem;#}
+{#    background-color: white;#}
+{#}#}
+</style>
+  {% endblock %}
+
+{% block body %}
+
+<div class="container" align = "center" style = "margin-top: 50px; margin-bottom: 50px;">
+<h2 class="text-left"><a href={{ ex_data[6] }}>{{ ex_data[0] }}</a></h2>
+<hr>
+{% with alerts = get_flashed_messages() %}
+{% if alerts %}
+    {% for alert in alerts %}
+        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+            <div class="alert alert-primary" role="alert">
+                {{ alert }}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+
+{#    <div class="card bg-light">#}
+        <div class="col-md-offset-2 col-md-8 col-md-offset-2 card bg-light">
+            <ul class="nav nav-tabs" style="padding-top: 20px;padding-bottom: 0px;">
+                <li class="nav-item">
+                    <a href="" data-target="#profile" data-toggle="tab" class="nav-link active">About</a>
+                </li>
+                {% if current_user.id == ex_data[8] %}
+                    <li class="nav-item">
+                        <a href="" data-target="#edit" data-toggle="tab" class="nav-link">Edit</a>
+                    </li>
+                {% endif %}
+                <li class="nav-item">
+                    <a href="" data-target="#messages" data-toggle="tab" class="nav-link">All Reviews</a>
+                </li>
+                <li class="nav-item">
+                    <a href="" data-target="#feedback" data-toggle="tab" class="nav-link">Add feedback</a>
+                </li>
+            </ul>
+            <div class="tab-content py-4">
+                <div class="tab-pane active" id="profile">
+                    <h5 class="mb-3">About</h5>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Country</h6>
+                            <p>
+                                {{ ex_data[1] }}
+                            </p>
+                            <h6>Description</h6>
+                            <p>
+                                {{ ex_data[2] }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Recent badges</h6>
+                            <a href="#" class="badge badge-dark badge-pill">legit</a>
+                            <a href="#" class="badge badge-dark badge-pill">fast</a>
+                            <a href="#" class="badge badge-dark badge-pill">profitable</a>
+                            <hr>
+                            <span class="badge badge-primary"><i class="fa fa-user"></i> {{ ex_data[3] }} Comments</span>
+                                <span class="badge badge-success"><i class="fa fa-cog"></i> {{ ex_data[4] }} Positives</span>
+                            <span class="badge badge-danger"><i class="fa fa-eye"></i> {{ ex_data[5] }} Complains</span>
+                        </div>
+                        <div class="col-md-12">
+                            <h5 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Recent Reviews</h5>
+                            <table class="table table-sm table-hover table-striped" style="padding-bottom:0px;margin-bottom: 0px;">
+                                <tbody>
+                            {% for i in recent %}
+                            {% if i.byAdmin == 1 %}
+                                <tr class="table-light">
+                                        <td>
+                                            <b style="color: darkred">[Admin] {{ i.userName }}</b>: {{ i.review }}
+                                        </td>
+                                    </tr>
+                            {% else %}
+                                {% if i.type == 'Comment' %}
+                                    <tr class="table-light">
+                                        <td>
+                                            <b>{{ i.userName }}</b>: {{ i.review }}
+                                        </td>
+                                    </tr>
+                                {% elif i.type == 'Positive' %}
+                                    <tr class="table-success">
+                                        <td>
+                                            <b>{{ i.userName }}</b>: {{ i.review }}
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr class="table-danger">
+                                        <td>
+                                            <b>{{ i.userName }}</b>: {{ i.review }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!--/row-->
+                </div>
+                <div class="tab-pane" id="messages">
+                    <div class="alert alert-info alert-dismissable">
+                        <a class="panel-close close" data-dismiss="alert">×</a>Some important stuff here.</div>
+                    <table class="table table-hover table-striped">
+                        <tbody>
+                        {% for i in comments %}
+                            {% if i.byAdmin == 1 %}
+                                <tr class="table-light" style="padding-bottom:0px;margin-bottom: 0px;">
+                                        <td>
+                                            <b style="color: darkred">[Admin] {{ i.userName }}</b>: {{ i.review }}
+                                        </td>
+                                    </tr>
+                            {% else %}
+                                {% if i.type == 'Comment' %}
+                                    <tr class="table-light">
+                                        <td>
+                                            <b>{{ i.userName }}</b>: {{ i.review }}
+                                        </td>
+                                    </tr>
+                                {% elif i.type == 'Positive' %}
+                                    <tr class="table-success">
+                                        <td>
+                                            <b>{{ i.userName }}</b>: {{ i.review }}
+                                        </td>
+                                    </tr>
+                                {% else %}
+                                    <tr class="table-danger">
+                                        <td>
+                                            <b>{{ i.userName }}</b>: {{ i.review }}
+                                        </td>
+                                    </tr>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane" id="edit">
+                    <form align = "left" method="POST" action="/exchanger/{{ ex_data[7] }}">
+                      {{ form1.hidden_tag() }}
+                      {{ wtf.form_field(form1.name) }}
+                      {{ wtf.form_field(form1.url) }}
+                      {{ wtf.form_field(form1.description) }}
+                      {{ wtf.form_field(form1.picURL) }}
+                      <div class="form-group">
+                         <button type="submit" class="btn btn-success">Save</button>
+                      </div>
+{#                                                <div class="form-group">#}
+{#                         <button type="submit" class="btn btn-danger">Delete exchanger</button>#}
+{#                      </div>#}
+                    </form>
+                </div>
+                <div class="tab-pane" id="feedback">
+                    {% if current_user.is_authenticated %}
+                     <form align = "left" method="POST" action="/exchanger/{{ ex_data[7] }}">
+                    {{ form.hidden_tag() }}
+              {{ wtf.form_field(form.review) }}
+              {{ wtf.form_field(form.type) }}
+                <div class="form-group" style="margin-bottom: 0px;">
+                    <button type="submit" class="btn btn-success">Submit my review</button>
+                </div>
+            </form>
+                    {% else %}
+                    <div class="alert alert-info alert-dismissable">
+                        <a class="panel-close close" data-dismiss="alert">×</a>Please <a href='/login'>login</a> to leave a review</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+</div>
+
+
+{% endblock %}

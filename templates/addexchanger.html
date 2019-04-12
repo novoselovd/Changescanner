@@ -1,0 +1,40 @@
+<!-- signup.html-->
+{% extends "base.html" %}
+{% import "wtf.html" as wtf %}
+
+{% block title %}Add exchanger{% endblock %}
+
+{% block body %}
+    <div class="container" align = "center" style = "margin-top: 50px; margin-bottom: 50px;">
+        <h2>Add your exchanger to ChangeScanner</h2>
+    <hr>
+        {% with alerts = get_flashed_messages() %}
+            {% if alerts %}
+                {% for alert in alerts %}
+                    <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+                        <div class="alert alert-success">
+                          {{ alert }}
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+            <form align = "left" method="POST" action="/addexchanger">
+              {{ form.hidden_tag() }}
+              {#{{ wtf.quick_form(form) }}#}
+              {{ wtf.form_field(form.name) }}
+              {{ wtf.form_field(form.url) }}
+              {{ wtf.form_field(form.description) }}
+              {{ wtf.form_field(form.country) }}
+              {{ wtf.form_field(form.comments) }}
+{#              {{ wtf.form_field(form.type) }}#}
+{#              {{ wtf.form_field(form.tos) }}#}
+              <div class="form-group">
+                 <button type="submit" class="btn btn-success">Submit</button>
+              </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

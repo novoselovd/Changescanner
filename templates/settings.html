@@ -1,0 +1,118 @@
+<!-- login.html-->
+{% extends "base.html" %}
+{% import "wtf.html" as wtf %}
+
+{% block title %}Settings{% endblock %}
+
+{% block style %}
+<style>
+.container .img{
+    text-align:center;
+}
+.container .details{
+    border-left:3px solid #ded4da;
+}
+.container .details p{
+    font-size:15px;
+    font-weight:bold;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="container" align = "center" style = "margin-top: 20px; margin-bottom: 20px;">
+<h2 class="text-left">Account settings</h2>
+<hr>
+{% with alerts = get_flashed_messages() %}
+{% if alerts %}
+    {% for alert in alerts %}
+        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+            <div class="alert alert-primary" role="alert">
+                {{ alert }}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endwith %}
+<div class="card">
+  <div class="row" style = "margin-top: 10px; margin-bottom: 10px;">
+    <div class="col-md-6 img">
+      <img src="https://api.adorable.io/avatars/{{ current_user.id }}"  alt="" class="img-rounded" style="width: 50%;">
+    </div>
+    <div class="col-md-6 details">
+      <blockquote>
+        <h5>{{ current_user.name }}</h5>
+        <small><cite title="Source Title">{{ current_user.email }}  <i class="icon-map-marker"></i></cite></small>
+      </blockquote>
+      <p>
+      </p>
+        <a href="#" class="card-link" data-toggle="modal" data-target="#ChangePassword">Change password</a>
+    </div>
+  </div>
+</div>
+
+<div class="card text-left">
+  <h5 class="card-header">Own an exchanger?</h5>
+  <div class="card-body">
+    <h5 class="card-title">Add it to our system!</h5>
+    <p class="card-text">It is always a good opportunity to boost the number of visitors who want to exchange e-currency on your website and increase your income!
+We accept automatic, semi-automatic and manual exchangers operated by humans as well as e-currency-to-cash exchangers.
+If you want to join us, please make sure you meet the requirements. After that, send us the info as listed below about your exchanger for us to consider your application and for you to get listed ASAP.</p>
+    <a href="/addexchanger" class="btn btn-primary">Proceed</a>
+  </div>
+</div>
+
+
+<!-- Modal window of changing password-->
+<div id="ChangePassword" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Change password</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+          <form align = "left" method="POST" action="/settings">
+              {{ change_password_form.hidden_tag() }}
+              {{ wtf.form_field(change_password_form.current_password) }}
+              {{ wtf.form_field(change_password_form.new_password) }}
+              {{ wtf.form_field(change_password_form.new_password_confirm) }}
+              <div class="form-group">
+                <button type="submit" class="btn btn-success">Change</button>
+              </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+{#    <!-- Modal window of choosing news-->#}
+{#<div id="ChooseNews" class="modal fade" role="dialog">#}
+{#  <div class="modal-dialog">#}
+{#    <!-- Modal content-->#}
+{#    <div class="modal-content">#}
+{#      <div class="modal-header">#}
+{#        <h4 class="modal-title">Choose sites to parse data from</h4>#}
+{#        <button type="button" class="close" data-dismiss="modal">&times;</button>#}
+{#      </div>#}
+{#      <div class="modal-body">#}
+{#          <form align = "left" method="POST" action="/settings">#}
+{#              {{ choose_form.hidden_tag() }}#}
+{#              <div class="d-inline-block">{{ wtf.form_field(choose_form.nytimes) }}</div><div class="d-inline-block">{% if first %}<small>&nbsp;- currently chosen</small>{% endif %}</div><br>#}
+{#              <div class="d-inline-block">{{ wtf.form_field(choose_form.hackernews) }}</div><div class="d-inline-block">{% if second %}<small>&nbsp;- currently chosen</small>{% endif %}</div><br>#}
+{#              <div class="d-inline-block">{{ wtf.form_field(choose_form.reddit) }}</div><div class="d-inline-block">{% if third %}<small>&nbsp;- currently chosen</small>{% endif %}</div><br>#}
+{#              <div class="d-inline-block">{{ wtf.form_field(choose_form.github) }}</div><div class="d-inline-block">{% if fourth %}<small>&nbsp;- currently chosen</small>{% endif %}</div><br>#}
+{#              <div class="d-inline-block">{{ wtf.form_field(choose_form.producthunt) }}</div><div class="d-inline-block">{% if fifth %}<small>&nbsp;- currently chosen</small>{% endif %}</div>#}
+{#              <br>#}
+{#              <div class="form-group">#}
+{#                <button type="submit" class="btn btn-success">Apply</button>#}
+{#              </div>#}
+{#          </form>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+{#</div>#}
+{% endblock %}

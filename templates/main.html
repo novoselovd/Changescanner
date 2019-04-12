@@ -1,0 +1,92 @@
+<!-- login.html-->
+{% extends "base.html" %}
+{% import "wtf.html" as wtf %}
+
+{% block title %}ChangeScanner - Main page{% endblock %}
+
+{% block style %}
+    <style>
+        .row {
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          display:         flex;
+          flex-wrap: wrap;
+        }
+        .row > [class*='col-'] {
+          display: flex;
+          flex-direction: column;
+        }
+    </style>
+
+
+{% endblock %}
+
+{% block body %}
+    <div class="container" align = "center" style = "margin-top: 50px; margin-bottom: 50px;">
+    <h2 class="text-left">Welcome!</h2>
+        <p class="text-left">ChangeScanner is a specialized online e-currency exchange service that monitors rates for dozens of popular conversion pairs in near real-time and offers one-click access to lists of reliable e-currency exchangers capable of helping you complete your transaction quickly and efficiently.</p>
+        <hr>
+
+{#        {% if not current_user.is_authenticated %}#}
+{#    <div class="card text-left">#}
+{#  <h5 class="card-header">Not registered yet?</h5>#}
+{#  <div class="card-body">#}
+{#    <h5 class="card-title">Create a free account</h5>#}
+{#    <p class="card-text">It will allow you to leave comments and rate the exchangers!</p>#}
+{#    <a href="/signup" class="btn btn-primary">Sign Up</a>#}
+{#  </div>#}
+{#</div>#}
+{##}
+{#    {% endif %}#}
+
+
+    <div class="row equal">
+    <div class="col-md-4">
+{#    <div align = "center" class="col-md-6 col-md-offset-3">#}
+            <form align = "left" method="POST" action="/">
+              {{ form.hidden_tag() }}
+              {#{{ wtf.quick_form(form) }}#}
+              {{ wtf.form_field(form.firstCurr) }}
+              {{ wtf.form_field(form.secondCurr) }}
+{#              {{ wtf.form_field(form.type) }}#}
+{#              {{ wtf.form_field(form.tos) }}#}
+              <div class="form-group float-right">
+                 <button type="submit" class="btn btn-success">Proceed</button>
+              </div>
+            </form>
+    </div>
+{#        </div>#}
+        <div class="col-md-8">
+            <div class="card h-100 text-left text-white bg-dark">
+                <h5 class="card-header">{{ today }}</h5>
+              <div class="card-body text-center">
+                  <span style="font-size: 18px">1$ = {{ dollarRates['USD'] }}₽
+                  <br>1€ = {{ dollarRates['EUR'] }}₽
+                  <br>1£ = {{ dollarRates['GBP'] }}₽
+                  <br>1BTC = {{ dollarRates['BTC'] }}₽</span>
+
+{#                  {% for key, value in dollarRates.items() %}#}
+{#                      {{ '%0.3f' % value }} <b>{{ key }}</b>&emsp; &emsp;#}
+{#                      {% if loop.index % 7 == 0 %}#}
+{#                          <p></p>#}
+{#                      {% endif %}#}
+{#                  {% endfor %}#}
+              </div>
+            </div>
+        </div>
+</div>
+
+<div>
+</div>
+        <h5 class="text-left">Best rates for the most popular conversion directions always in front of you</h5>
+        <p class="text-left">The service constantly aggregates exchange rates from the most reliable and trusted e-currency exchangers and presents them in the form of a well-structured and dynamically updated table. Clicking a currency pair brings up a list exchangers with the best rates, while clicking a specific exchanger’s name opens a corresponding website. ChangeScanner ensures minimal conversion losses and saves your money and time by bringing all relevant information right in front of your eyes. Safe and beneficial deals are just one click away!</p>
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block scriptBlock %}
+{% endblock %}
