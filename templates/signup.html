@@ -10,16 +10,24 @@
         {% with alerts = get_flashed_messages() %}
             {% if alerts %}
                 {% for alert in alerts %}
-                    <div class="col-xs-12 col-sm-6 col-sm-offset-3">
-                        <div class="alert alert-danger">
-                          {{ alert }}
+                    {% if "Success" in alert or "further" in alert %}
+                        <div class="col-md-6 col-md-offset-3">
+                            <div class="alert alert-success alert-dismissable">
+                              <a class="panel-close close" data-dismiss="alert">×</a>{{ alert }}
+                            </div>
                         </div>
-                    </div>
+                    {% else %}
+                        <div class="col-md-6 col-md-offset-3">
+                            <div class="alert alert-danger alert-dismissable">
+                              <a class="panel-close close" data-dismiss="alert">×</a>{{ alert }}
+                            </div>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         {% endwith %}
 
-        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+        <div class="col-md-6 col-md-offset-3">
             <form align = "left" method="POST" action="/signup">
               {{ form.hidden_tag() }}
               {#{{ wtf.quick_form(form) }}#}

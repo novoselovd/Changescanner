@@ -9,26 +9,6 @@
                 <h2 class="text-left">Search results</h2>
         <p class="text-left">Results are sorted from the most profitable exchanges to the least ones</p>
         <hr>
-        {% with alerts = get_flashed_messages() %}
-            {% if alerts %}
-                {% for alert in alerts %}
-                    {% if "Success" in alert or "further" in alert %}
-                        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
-                            <div class="alert alert-success">
-                              {{ alert }}
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
-                            <div class="alert alert-danger">
-                              {{ alert }}
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
-
 
 
     <table class="table table-striped table-bordered">

@@ -11,15 +11,15 @@
             {% if alerts %}
                 {% for alert in alerts %}
                     {% if "Success" in alert or "further" in alert %}
-                        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
-                            <div class="alert alert-success">
-                              {{ alert }}
+                        <div class="col-md-6 col-md-offset-3">
+                            <div class="alert alert-success alert-dismissable">
+                              <a class="panel-close close" data-dismiss="alert">×</a>{{ alert }}
                             </div>
                         </div>
                     {% else %}
-                        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
-                            <div class="alert alert-danger">
-                              {{ alert }}
+                        <div class="col-md-6 col-md-offset-3">
+                            <div class="alert alert-danger alert-dismissable">
+                              <a class="panel-close close" data-dismiss="alert">×</a>{{ alert }}
                             </div>
                         </div>
                     {% endif %}
@@ -27,7 +27,7 @@
             {% endif %}
         {% endwith %}
 
-        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+        <div class="col-md-6 col-md-offset-3">
             {% if not current_user.is_authenticated %}
             <form align = "left" method="POST" action="/login">
                     {{ form.hidden_tag() }}

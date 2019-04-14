@@ -31,6 +31,8 @@ class Exchangers(db.Model):
     complains = db.Column(db.Integer, default=0)
     image = db.Column(db.String)
     XMLlink = db.Column(db.String(50))
+    dateOfCreation = db.Column(db.String(50))
+    badges = db.Column(db.String(500))
     ownerId = db.Column(db.Integer, default=0)
     coms = db.relationship('Comment', backref='Exchanger', lazy='dynamic')
     rates = db.relationship('Rates', backref='Exchanger', lazy='dynamic')
@@ -56,4 +58,7 @@ class Rates(UserMixin, db.Model):
     get = db.Column(db.Float)
     coef = db.Column(db.Float)
     exchangerId = db.Column(db.Integer, db.ForeignKey('exchangers.id'))
+
+
+
 

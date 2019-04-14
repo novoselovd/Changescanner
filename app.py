@@ -103,10 +103,6 @@ scheduler.start()
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: scheduler.shutdown())
 
-
-
-
-
 # Login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -175,7 +171,7 @@ def signup():
             flash("Success! Now you can log in")
             return redirect(url_for('login'))
         else:
-            flash('Invalid username! It must contain at least 1 english letter')
+            flash('Invalid name! It must contain at least 1 english letter')
             return redirect(url_for('signup'))
 
     return render_template('signup.html', form=form)
@@ -187,7 +183,11 @@ def exchanger(r):
     if not ex:
         abort(404)
     ex_data = [ex.name, ex.country, ex.description, ex.comments, ex.positives, ex.complains, ex.link, ex.id, ex.ownerId,
-               ex.image]
+               ex.image, ex.dateOfCreation]
+
+    badges = []
+    if ex.badges:
+        badges = ex.badges.split(',')
 
     form = CommentForm()
     form1 = EditForm()
@@ -228,13 +228,13 @@ def exchanger(r):
             ex.link = form1.url.data
         if form1.description.data:
             ex.description = form1.description.data
-        if form1.picURL.data:
-            ex.image = form1.picURL.data
+        # if form1.picURL.data:
+        #     ex.image = form1.picURL.data
 
         db.session.commit()
         return redirect('/exchanger/{}'.format(r))
 
-    return render_template('exchanger.html', ex_data=ex_data, form=form, comments=comments, recent=recent, form1=form1)
+    return render_template('exchanger.html', ex_data=ex_data, form=form, comments=comments, recent=recent, form1=form1, badges=badges)
 
 
 # Sending confirmation link
@@ -272,17 +272,21 @@ def hello_world():
 
 
 @app.route('/addexchanger', methods=['GET', 'POST'])
-@login_required
 def addexchanger():
-    form = AddExchangerForm()
-    if form.validate_on_submit():
+    if request.method == 'POST':
+        url = request.form.get('url')
+        name = request.form.get('name')
+        xml = request.form.get('xml')
+        country = request.form.get('country')
+        description = request.form.get('comments')
+
         msg = Message('Exchanger adding request', sender='ouramazingapp@gmail.com', recipients=['tbago@yandex.ru'])
-        msg.html = str(form.name.data) + ' ' + str(form.url.data) + ' ' + str(form.description.data) + ' ' + str(form.country.data) + ' ' + \
-                   str(form.comments.data)
+        msg.html = str(name) + ' ' + str(url) + ' ' + str(xml) + ' ' + str(country) + ' ' + \
+                   str(description)
         Thread(target=send_async_email, args=(app, msg)).start()
-        flash("Your exchanger will be checked and added")
-        return redirect(url_for('addexchanger'))
-    return render_template('addexchanger.html', form=form)
+        flash("We will check your exchanger and add it to our system")
+        return redirect('addexchanger')
+    return render_template('addexchanger.html')
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -329,6 +333,34 @@ def settings():
 @app.route('/test', methods=['GET', 'POST'])
 def test():
     return render_template('test.html')
+
+
+@app.route('/contact', methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        url = request.form.get('url')
+        name = request.form.get('name')
+        email = request.form.get('email')
+        subj = request.form.get('subject')
+        message = request.form.get('comments')
+
+        msg = Message(subj, sender='ouramazingapp@gmail.com', recipients=['tbago@yandex.ru'])
+        msg.html = str(str(name) + ' ' + str(email) + ' ' + str(message))
+        Thread(target=send_async_email, args=(app, msg)).start()
+
+        return redirect(url)
+    else:
+        return abort(404)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.route('/terms', methods=['GET', 'POST'])
+def terms():
+    return render_template('terms.html')
 
 
 if __name__ == '__main__':

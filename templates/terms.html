@@ -1,0 +1,45 @@
+<!-- login.html-->
+{% extends "base.html" %}
+{% import "wtf.html" as wtf %}
+
+{% block title %}ChangeScanner - Terms{% endblock %}
+
+{% block style %}
+    <style>
+        .row {
+          display: -webkit-box;
+          display: -webkit-flex;
+          display: -ms-flexbox;
+          display:         flex;
+          flex-wrap: wrap;
+        }
+        .row > [class*='col-'] {
+          display: flex;
+          flex-direction: column;
+        }
+    </style>
+
+
+{% endblock %}
+
+{% block body %}
+    <div class="container" align = "center" style = "margin-top: 50px; margin-bottom: 50px;">
+    <h2 class="text-left">Terms</h2>
+        <hr>
+        <p class="text-left">We, the Operators of Website www.changescanner.com, provide it as a public service to our users.</p>
+        <p class="text-left">Please carefully review the following basic rules that govern your use of the Website. Please note that your use of the Website constitutes your unconditional agreement to follow and be bound by these Terms and Conditions of Use. If you (the "User") do not agree to them, do not use the Website, provide any materials to the Website or download any materials from them.</p>
+        <p class="text-left">The Operators reserve the right to update or modify these Terms and Conditions at any time without prior notice to User. Your use of the Website following any such change constitutes your unconditional agreement to follow and be bound by these Terms and Conditions as changed. For this reason, we encourage you to review these Terms and Conditions of Use whenever you use the Website.</p>
+        <p class="text-left">These Terms and Conditions of Use apply to the use of the Website and do not extend to any linked third party sites. These Terms and Conditions and our Privacy Policy, which are hereby incorporated by reference, contain the entire agreement (the "Agreement") between you and the Operators with respect to the Website. Any rights not expressly granted herein are reserved.</p>
+
+        <p>...</p>
+
+
+    </div>
+
+
+
+{% endblock %}
+
+
+{% block scriptBlock %}
+{% endblock %}

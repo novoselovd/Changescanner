@@ -30,18 +30,8 @@
 
 <div class="container" align = "center" style = "margin-top: 50px; margin-bottom: 50px;">
 <h2 class="text-left"><a href={{ ex_data[6] }}>{{ ex_data[0] }}</a></h2>
+<p class="text-left">{{ ex_data[2] }}</p>
 <hr>
-{% with alerts = get_flashed_messages() %}
-{% if alerts %}
-    {% for alert in alerts %}
-        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
-            <div class="alert alert-primary" role="alert">
-                {{ alert }}
-            </div>
-        </div>
-    {% endfor %}
-{% endif %}
-{% endwith %}
 
 {#    <div class="card bg-light">#}
         <div class="col-md-offset-2 col-md-8 col-md-offset-2 card bg-light">
@@ -70,16 +60,21 @@
                             <p>
                                 {{ ex_data[1] }}
                             </p>
-                            <h6>Description</h6>
+                            <h6>Date of creation</h6>
                             <p>
-                                {{ ex_data[2] }}
+                                {{ ex_data[10] }}
                             </p>
                         </div>
                         <div class="col-md-6">
-                            <h6>Recent badges</h6>
-                            <a href="#" class="badge badge-dark badge-pill">legit</a>
-                            <a href="#" class="badge badge-dark badge-pill">fast</a>
-                            <a href="#" class="badge badge-dark badge-pill">profitable</a>
+                            {% if badges %}
+                                <h6>Recent badges</h6>
+                                {% for i in badges %}
+                                    <a href="#" class="badge badge-dark badge-pill">{{ i }}</a>
+                                {% endfor %}
+
+                            {% else %}
+                                <h6>Exchanger got no badges yet</h6>
+                            {% endif %}
                             <hr>
                             <span class="badge badge-primary"><i class="fa fa-user"></i> {{ ex_data[3] }} Comments</span>
                                 <span class="badge badge-success"><i class="fa fa-cog"></i> {{ ex_data[4] }} Positives</span>
@@ -126,8 +121,8 @@
                 </div>
                 <div class="tab-pane" id="messages">
                     <div class="alert alert-info alert-dismissable">
-                        <a class="panel-close close" data-dismiss="alert">×</a>Some important stuff here.</div>
-                    <table class="table table-hover table-striped">
+                        <a class="panel-close close" data-dismiss="alert">×</a>Pinned message</div>
+                    <table class="table table-hover table-striped" style="margin-bottom: 0px;">
                         <tbody>
                         {% for i in comments %}
                             {% if i.byAdmin == 1 %}
@@ -164,10 +159,9 @@
                 <div class="tab-pane" id="edit">
                     <form align = "left" method="POST" action="/exchanger/{{ ex_data[7] }}">
                       {{ form1.hidden_tag() }}
-                      {{ wtf.form_field(form1.name) }}
-                      {{ wtf.form_field(form1.url) }}
+                      {{ wtf.form_field(form1.name, value=ex_data[0]) }}
+                      {{ wtf.form_field(form1.url, value=ex_data[6]) }}
                       {{ wtf.form_field(form1.description) }}
-                      {{ wtf.form_field(form1.picURL) }}
                       <div class="form-group">
                          <button type="submit" class="btn btn-success">Save</button>
                       </div>
