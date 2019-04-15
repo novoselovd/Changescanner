@@ -7,7 +7,7 @@ from pytz import timezone
 from datetime import datetime
 from pasgen import getrandompassword
 from forms import SignUpForm, LoginForm, ResetForm, AddExchangerForm, ChangePasswordForm, CommentForm, MainForm, EditForm
-from flask import Flask, redirect, url_for, render_template, flash, abort, request
+from flask import Flask, redirect, url_for, render_template, flash, abort, request, jsonify
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
@@ -16,10 +16,16 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from werkzeug.security import generate_password_hash, check_password_hash
 from forex_python.converter import CurrencyRates
 from apscheduler.schedulers.background import BackgroundScheduler
+from urllib.parse import urlsplit, urlunsplit
 
 
 app = Flask(__name__)
 Bootstrap(app)
+
+# app.config['ENV'] = 'production'
+# app.config['DEBUG'] = True
+# app.config['TESTING'] = False
+
 dollarRates = {'USD': 65.14074494, 'EUR': 73.24648392, 'GBP': 84.93819465, 'BTC': 335891.4}
 
 # db connection
@@ -327,12 +333,41 @@ def settings():
         else:
             flash('Current password is wrong!')
             return redirect(url_for('settings'))
+    if request.method == 'POST':
+        fCurr = request.form.get('first')
+        sCurr = request.form.get('second')
+        ratio = request.form.get('input')
+
+        try:
+            ratio = float(ratio)
+            if ratio <= 1:
+                flash('Ratio must be bigger than 1')
+                return redirect(url_for('settings'))
+            try:
+                uri = '/data?in=' + fCurr + '&out=' + sCurr
+                r = requests.get('http://' + request.host + uri)
+                data = r.json()
+                if int(data['ratio']) == -1:
+                    flash('You can not subscribe on this kind of currency exchange')
+                    return redirect(url_for('settings'))
+                if ratio > data['ratio']:
+                    flash('Your ratio can not be bigger than the current one')
+                    return redirect(url_for('settings'))
+                print(data['ratio'])
+            except Exception as e:
+                flash('Some error occurred')
+                return redirect(url_for('settings'))
+        except Exception as e:
+            flash('Ratio input format is wrong!')
+            return redirect(url_for('settings'))
+
+
     return render_template('settings.html', change_password_form=change_password_form)
 
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-    return render_template('test.html')
+# @app.route('/test', methods=['GET', 'POST'])
+# def test():
+#     return render_template('test.html')
 
 
 @app.route('/contact', methods=['GET', 'POST'])
@@ -361,6 +396,23 @@ def page_not_found(e):
 @app.route('/terms', methods=['GET', 'POST'])
 def terms():
     return render_template('terms.html')
+
+
+@app.route('/data', methods=['GET', 'POST'])
+def data():
+    fCurr = request.args.get('in')
+    sCurr = request.args.get('out')
+
+    q = {'ratio': -1}
+
+    if fCurr != sCurr:
+        try:
+            cf = db.session.query(models.Rates).filter_by(type=(fCurr + sCurr)).order_by(models.Rates.coef).first().coef
+            q = {'ratio': cf}
+        except Exception as e:
+            q = {'ratio': -1}
+
+    return jsonify(q)
 
 
 if __name__ == '__main__':

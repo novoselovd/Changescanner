@@ -1,62 +1,127 @@
-<!-- login.html-->
 {% extends "base.html" %}
 {% import "wtf.html" as wtf %}
 
-{% block title %}ChangeScanner - Settings{% endblock %}
-
 {% block style %}
-<style>
-.container .img{
-    text-align:center;
-}
-.container .details{
-    border-left:3px solid #ded4da;
-}
-.container .details p{
-    font-size:15px;
-    font-weight:bold;
-}
-</style>
+    <style>
+
+    </style>
 {% endblock %}
 
+{% block title %}ChangeScanner - Settings{% endblock %}
+
 {% block body %}
+       <div class="container" style = "margin-top: 50px; margin-bottom: 50px;">
+    <h2 class="text-left">Settings</h2>
+           <p>Here you can manage your profile and notification subscriptions</p>
+        <hr>
 
-<div class="container" align = "center" style = "margin-top: 20px; margin-bottom: 20px;">
-<h2 class="text-left">Account settings</h2>
-<hr>
+       {% with alerts = get_flashed_messages() %}
+            {% if alerts %}
+                {% for alert in alerts %}
+                    {% if 'uccess' in alert %}
+                        <div class="alert alert-success alert-dismissable">
+                            <a class="panel-close close" data-dismiss="alert">×</a>{{ alert }}
+                        </div>
+                     {% else %}
+                        <div class="alert alert-danger alert-dismissable">
+                            <a class="panel-close close" data-dismiss="alert">×</a>{{ alert }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
 
-<div class="card">
-  <div class="row" style = "margin-top: 10px; margin-bottom: 10px;">
-    <div class="col-md-6 img">
-      <img src="https://api.adorable.io/avatars/{{ current_user.id }}"  alt="" class="img-rounded" style="width: 50%;">
-    </div>
-    <div class="col-md-6 details">
-      <blockquote>
-        <h5>{{ current_user.name }}</h5>
-        <small><cite title="Source Title">{{ current_user.email }}  <i class="icon-map-marker"></i></cite></small>
-      </blockquote>
-      <p>
-      </p>
-        <a href="#" class="card-link" data-toggle="modal" data-target="#ChangePassword">Change password</a>
+
+
+       <div class="row">
+           <div class="col-md-3">
+               <div class="card h-100 text-center bg-light">
+                   <h5 class="card-header">Your profile</h5>
+                   <div class="card-body text-center">
+                       <img src="https://api.adorable.io/avatars/{{ current_user.id }}" class="rounded-circle" style="max-height: 200px">
+                       <br><br><h3>{{ current_user.name }}</h3>
+                       <span style="font-size: 12px;">{{ current_user.email }}</span>
+                       <hr>
+                       <a href="#" class="card-link" data-toggle="modal" data-target="#ChangePassword">Change password</a>
+                   </div>
+                </div>
+           </div>
+
+           <div class="col-md-9">
+               <div class="card card-block h-100 text-center bg-light">
+                   <h5 class="card-header">Notification subscriptions</h5>
+                   <div class="card-body align-middle" style="margin-top: 100px;margin-bottom: 100px">
+                       <h3>Currently you have no active notification subscriptions</h3>
+                       <p>You can add up to 5 new subscriptions</p>
+                       <button class="btn btn-dark" data-toggle="modal" data-target="#popup">Add a new one</button>
+                   </div>
+                </div>
+           </div>
+       </div>
+
+       </div>
+
+    <!-- Modal window of changing password-->
+<div id="popup" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Add new subscription</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="sub-form" method="POST" action="/settings">
+              <div class="form-group">
+                <label for="first">Give</label>
+                <select class="form-control" id="first" name="first">
+                  <option value="WMR">Webmoney RUB</option>
+                  <option value="QWRUB">QIWI RUB</option>
+                  <option value="YAMRUB">Yandex.Money RUB</option>
+                  <option value="BTC">Bitcoin</option>
+                  <option value="SBERRUB">Sberbank RUB</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="second">Get</label>
+                <select class="form-control" id="second" name="second">
+                  <option value="WMR">Webmoney RUB</option>
+                  <option value="QWRUB">QIWI RUB</option>
+                  <option value="YAMRUB">Yandex.Money RUB</option>
+                  <option value="BTC">Bitcoin</option>
+                  <option value="SBERRUB">Sberbank RUB</option>
+                </select>
+              </div>
+                <div class="form-group">
+                    <label for="input">Ratio</label>
+                    <input type="text" class="form-control" name="input" required="required" id="input" placeholder="Must be smaller than the current ratio" >
+                </div>
+                <div class="form-group"> <a href="#" id="get-data">What's current ratio?</a> </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" id="current" readonly>
+                    <p style="font-size: 14px">If current ratio is -1, it means that you can't subscribe on this kind of currency exchange</p>
+                </div>
+
+                <hr>
+                <p>Ratio is the result of dividing the amount of money you give by the amount of money you get.
+                    Lets say, to buy 1000 Yandex Money RUB you can afford to pay 1100 Sberbank RUB. In this case ratio will be
+                1100/1000 = 1.1. Ratio is always bigger than 1.</p>
+
+            <hr>
+{#                <div class="modal-footer">#}
+                    <div class="text-center">
+                        <button class="btn btn-dark">Add subscription</button>
+                    </div>
+{#                </div>#}
+        </form>
+      </div>
     </div>
   </div>
 </div>
-
-<div class="card text-left">
-  <h5 class="card-header">Own an exchanger?</h5>
-  <div class="card-body">
-    <h5 class="card-title">Add it to our system!</h5>
-    <p class="card-text">It is always a good opportunity to boost the number of visitors who want to exchange e-currency on your website and increase your income!
-We accept automatic, semi-automatic and manual exchangers operated by humans as well as e-currency-to-cash exchangers.
-If you want to join us, please make sure you meet the requirements. After that, send us the info as listed below about your exchanger for us to consider your application and for you to get listed ASAP.</p>
-    <a href="/addexchanger" class="btn btn-primary">Proceed</a>
-  </div>
-</div>
-
 
 <!-- Modal window of changing password-->
 <div id="ChangePassword" class="modal fade" role="dialog">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-centered">
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -79,30 +144,20 @@ If you want to join us, please make sure you meet the requirements. After that, 
 </div>
 </div>
 
-{#    <!-- Modal window of choosing news-->#}
-{#<div id="ChooseNews" class="modal fade" role="dialog">#}
-{#  <div class="modal-dialog">#}
-{#    <!-- Modal content-->#}
-{#    <div class="modal-content">#}
-{#      <div class="modal-header">#}
-{#        <h4 class="modal-title">Choose sites to parse data from</h4>#}
-{#        <button type="button" class="close" data-dismiss="modal">&times;</button>#}
-{#      </div>#}
-{#      <div class="modal-body">#}
-{#          <form align = "left" method="POST" action="/settings">#}
-{#              {{ choose_form.hidden_tag() }}#}
-{#              <div class="d-inline-block">{{ wtf.form_field(choose_form.nytimes) }}</div><div class="d-inline-block">{% if first %}<small>&nbsp;- currently chosen</small>{% endif %}</div><br>#}
-{#              <div class="d-inline-block">{{ wtf.form_field(choose_form.hackernews) }}</div><div class="d-inline-block">{% if second %}<small>&nbsp;- currently chosen</small>{% endif %}</div><br>#}
-{#              <div class="d-inline-block">{{ wtf.form_field(choose_form.reddit) }}</div><div class="d-inline-block">{% if third %}<small>&nbsp;- currently chosen</small>{% endif %}</div><br>#}
-{#              <div class="d-inline-block">{{ wtf.form_field(choose_form.github) }}</div><div class="d-inline-block">{% if fourth %}<small>&nbsp;- currently chosen</small>{% endif %}</div><br>#}
-{#              <div class="d-inline-block">{{ wtf.form_field(choose_form.producthunt) }}</div><div class="d-inline-block">{% if fifth %}<small>&nbsp;- currently chosen</small>{% endif %}</div>#}
-{#              <br>#}
-{#              <div class="form-group">#}
-{#                <button type="submit" class="btn btn-success">Apply</button>#}
-{#              </div>#}
-{#          </form>#}
-{#      </div>#}
-{#    </div>#}
-{#  </div>#}
-{#</div>#}
+{% endblock %}
+
+{% block scriptBlock %}
+    <script>
+        $(document).ready(function () {
+          $('#get-data').click(function () {
+            var f = $( "#first" ).val();
+            var s = $( "#second" ).val();
+
+            var uri = '/data?in=' + f + '&out=' + s;
+            $.getJSON(uri, function (data) {
+                $('#current').val(data['ratio']);
+            });
+          });
+        });
+    </script>
 {% endblock %}
