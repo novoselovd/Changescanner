@@ -52,7 +52,7 @@ login_manager.login_view = 'login'
 
 
 import models
-import ratesParser
+import parser
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -95,7 +95,7 @@ def update_data():
 
 # UPDATING RATES
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=ratesParser.run, trigger="interval", seconds=300)
+scheduler.add_job(func=parser.run, trigger="interval", seconds=300)
 # UPDATING DOLLAR RATES
 scheduler.add_job(func=update_data, trigger="interval", seconds=600)
 scheduler.start()

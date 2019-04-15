@@ -7,7 +7,7 @@ UTC = timezone('UTC')
 
 
 def time_now():
-    return datetime.now(UTC)
+    return str(datetime.now(timezone('Europe/Moscow')).strftime('%B %dth, %Y'))
 
 
 class User(UserMixin, db.Model):
@@ -42,7 +42,7 @@ class Comment(UserMixin, db.Model):
     __bind_key__ = 'comment'
     id = db.Column(db.Integer, primary_key=True)
     review = db.Column(db.String(200))
-    commentTime = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)
+    commentTime = db.Column(db.String, default=time_now())
     type = db.Column(db.String(50))
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
     userName = db.Column(db.String(50))

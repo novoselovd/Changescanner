@@ -16,13 +16,75 @@
     font-size:15px;
     font-weight:bold;
 }
-{#.emp-profile {#}
-{#    padding: 3%;#}
-{#    margin-top: 3%;#}
-{#    margin-bottom: 3%;#}
-{#    border-radius: 0.5rem;#}
-{#    background-color: white;#}
-{#}#}
+.detailBox {
+  width: 320px;
+  border: 1px solid #bbb;
+  margin: 50px;
+}
+.titleBox {
+  background-color: #fdfdfd;
+  padding: 10px;
+}
+.titleBox label {
+  color: #444;
+  margin: 0;
+  display: inline-block;
+}
+
+.commentBox {
+  padding: 10px;
+  border-top: 1px dotted #bbb;
+}
+.commentBox .form-group:first-child,
+.actionBox .form-group:first-child {
+  width: 80%;
+}
+.commentBox .form-group:nth-child(2),
+.actionBox .form-group:nth-child(2) {
+  width: 18%;
+}
+.actionBox .form-group * {
+  width: 100%;
+}
+.taskDescription {
+  margin-top: 10px 0;
+}
+.commentList {
+  padding: 0;
+  list-style: none;
+  overflow: auto;
+}
+.commentList li {
+  margin: 0;
+  margin-top: 10px;
+}
+.commentList li > div {
+  display: table-cell;
+}
+.commenterImage {
+  width: 40px;
+  margin-right: 5px;
+  height: 100%;
+  float: left;
+}
+.commenterImage img {
+  width: 100%;
+  border-radius: 50%;
+}
+.commentText p {
+  margin: 0;
+}
+.sub-text {
+  color: #aaa;
+  font-family: verdana;
+  font-size: 11px;
+}
+.actionBox {
+  border-top: 1px dotted #bbb;
+  padding: 10px;
+}
+
+
 </style>
   {% endblock %}
 
@@ -82,80 +144,176 @@
                         </div>
                         <div class="col-md-12">
                             <h5 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Recent Reviews</h5>
-                            <table class="table table-sm table-hover table-striped" style="padding-bottom:0px;margin-bottom: 0px;">
-                                <tbody>
-                            {% for i in recent %}
-                            {% if i.byAdmin == 1 %}
-                                <tr class="table-light">
-                                        <td>
-                                            <b style="color: darkred">[Admin] {{ i.userName }}</b>: {{ i.review }}
-                                        </td>
-                                    </tr>
-                            {% else %}
-                                {% if i.type == 'Comment' %}
-                                    <tr class="table-light">
-                                        <td>
-                                            <b>{{ i.userName }}</b>: {{ i.review }}
-                                        </td>
-                                    </tr>
-                                {% elif i.type == 'Positive' %}
-                                    <tr class="table-success">
-                                        <td>
-                                            <b>{{ i.userName }}</b>: {{ i.review }}
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    <tr class="table-danger">
-                                        <td>
-                                            <b>{{ i.userName }}</b>: {{ i.review }}
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                                </tbody>
-                            </table>
+                           <div class="actionBox text-left">
+                                <ul class="commentList" style="padding-bottom:0px;margin-bottom: 0px;">
+                                    {% for i in recent %}
+                                        {% if i.byAdmin == 1 %}
+                                            <li class="rounded">
+                                                <div class="commenterImage" style="padding: 5px;">
+                                                  <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
+                                                </div>
+                                                <div class="commentText">
+                                                    <p class=""><b>★ {{ i.userName }}</b>: {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+
+                                                </div>
+                                            </li>
+                                        {% else %}
+                                            {% if i.type == 'Comment' %}
+                                                <li class="rounded">
+                                                    <div class="commenterImage" style="padding: 5px;">
+                                                      <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
+                                                    </div>
+                                                    <div class="commentText">
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+
+                                                    </div>
+                                                </li>
+                                            {% elif i.type == 'Positive' %}
+                                                <li class="rounded" style="background-color: #cbfbdf">
+                                                    <div class="commenterImage" style="padding: 5px;">
+                                                      <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
+                                                    </div>
+                                                    <div class="commentText">
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+
+                                                    </div>
+                                                </li>
+                                            {% else %}
+                                                <li class="rounded" style="background-color: #ffc2b8">
+                                                    <div class="commenterImage" style="padding: 5px;">
+                                                      <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
+                                                    </div>
+                                                    <div class="commentText">
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+
+                                                    </div>
+                                                </li>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                           </div>
                         </div>
                     </div>
                     <!--/row-->
                 </div>
                 <div class="tab-pane" id="messages">
                     <div class="alert alert-info alert-dismissable">
-                        <a class="panel-close close" data-dismiss="alert">×</a>Pinned message</div>
-                    <table class="table table-hover table-striped" style="margin-bottom: 0px;">
-                        <tbody>
-                        {% for i in comments %}
-                            {% if i.byAdmin == 1 %}
-                                <tr class="table-light" style="padding-bottom:0px;margin-bottom: 0px;">
-                                        <td>
-                                            <b style="color: darkred">[Admin] {{ i.userName }}</b>: {{ i.review }}
-                                        </td>
-                                    </tr>
-                            {% else %}
-                                {% if i.type == 'Comment' %}
-                                    <tr class="table-light">
-                                        <td>
-                                            <b>{{ i.userName }}</b>: {{ i.review }}
-                                        </td>
-                                    </tr>
-                                {% elif i.type == 'Positive' %}
-                                    <tr class="table-success">
-                                        <td>
-                                            <b>{{ i.userName }}</b>: {{ i.review }}
-                                        </td>
-                                    </tr>
-                                {% else %}
-                                    <tr class="table-danger">
-                                        <td>
-                                            <b>{{ i.userName }}</b>: {{ i.review }}
-                                        </td>
-                                    </tr>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                        </tbody>
-                    </table>
+                        <a class="panel-close close" data-dismiss="alert">×</a>Sorted from new to old</div>
+
+                    <div class="actionBox text-left">
+                                <ul class="commentList" style="padding-bottom:0px;margin-bottom: 0px;">
+                                    {% for i in comments %}
+                                        {% if i.byAdmin == 1 %}
+                                            <li class="rounded">
+                                                <div class="commenterImage" style="padding: 5px;">
+                                                  <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
+                                                </div>
+                                                <div class="commentText">
+                                                    <p class=""><b>★ {{ i.userName }}</b>: {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+
+                                                </div>
+                                            </li>
+                                        {% else %}
+                                            {% if i.type == 'Comment' %}
+                                                <li class="rounded">
+                                                    <div class="commenterImage" style="padding: 5px;">
+                                                      <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
+                                                    </div>
+                                                    <div class="commentText">
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+
+                                                    </div>
+                                                </li>
+                                            {% elif i.type == 'Positive' %}
+                                                <li class="rounded" style="background-color: #cbfbdf">
+                                                    <div class="commenterImage" style="padding: 5px;">
+                                                      <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
+                                                    </div>
+                                                    <div class="commentText">
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+
+                                                    </div>
+                                                </li>
+                                            {% else %}
+                                                <li class="rounded" style="background-color: #ffc2b8">
+                                                    <div class="commenterImage" style="padding: 5px;">
+                                                      <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
+                                                    </div>
+                                                    <div class="commentText">
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+
+                                                    </div>
+                                                </li>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+{#            <li>#}
+{#                <div class="commenterImage" style="padding: 5px;">#}
+{#                  <img src="http://placekitten.com/50/50" />#}
+{#                </div>#}
+{#                <div class="commentText">#}
+{#                    <p class="">Hello this is a test comment.</p> <span class="date sub-text">on March 5th, 2014</span>#}
+{##}
+{#                </div>#}
+{#            </li>#}
+{#            <li class="rounded" style="background-color: #ffc2b8">#}
+{#                <div class="commenterImage" style="padding: 5px;">#}
+{#                  <img src="http://placekitten.com/45/45" />#}
+{#                </div>#}
+{#                <div class="commentText">#}
+{#                    <p class=""><b>Ivan:</b> Hello this is a test comment and this comment is particularly very long and it goes on and on and on.</p> <span class="date sub-text">on March 5th, 2014</span>#}
+{##}
+{#                </div>#}
+{#            </li>#}
+{#            <li class="rounded" style="background-color: #cbfbdf">#}
+{#                <div class="commenterImage" style="padding: 5px;">#}
+{#                  <img src="https://api.adorable.io/avatars/1"/>#}
+{#                </div>#}
+{#                <div class="commentText">#}
+{#                    <p class=""><b>Sasha:</b> Hello this is a test comment.</p> <span class="date sub-text">on March 5th, 2014</span>#}
+{##}
+{#                </div>#}
+{#            </li>#}
+{#        </ul>#}
+
+{#                    <table class="table table-hover table-striped" style="margin-bottom: 0px;">#}
+{#                        <tbody>#}
+{#                        {% for i in comments %}#}
+{##}
+{#                            {% if i.byAdmin == 1 %}#}
+{#                                <tr class="table-light" style="padding-bottom:0px;margin-bottom: 0px;">#}
+{#                                        <td>#}
+{#                                            <b>★ {{ i.userName }}</b>: {{ i.review }}#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                            {% else %}#}
+{#                                {% if i.type == 'Comment' %}#}
+{#                                    <tr class="table-light">#}
+{#                                        <td>#}
+{#                                            <b>{{ i.userName }}</b>: {{ i.review }}#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                {% elif i.type == 'Positive' %}#}
+{#                                    <tr class="table-success">#}
+{#                                        <td>#}
+{#                                            <b>{{ i.userName }}</b>: {{ i.review }}#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                {% else %}#}
+{#                                    <tr class="table-danger">#}
+{#                                        <td>#}
+{#                                            <b>{{ i.userName }}</b>: {{ i.review }}#}
+{#                                        </td>#}
+{#                                    </tr>#}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+{#                        </tbody>#}
+{#                    </table>#}
                 </div>
+            </div>
                 <div class="tab-pane" id="edit">
                     <form align = "left" method="POST" action="/exchanger/{{ ex_data[7] }}">
                       {{ form1.hidden_tag() }}

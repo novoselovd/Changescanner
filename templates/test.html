@@ -8,65 +8,34 @@
     </style>
 {% endblock %}
 
-{% block title %}ChangeScanner - Add exchanger{% endblock %}
+{% block title %}ChangeScanner - Settings{% endblock %}
 
 {% block body %}
        <div class="container" style = "margin-top: 50px; margin-bottom: 50px;">
-    <h2 class="text-left">Add your exchanger to ChangeScanner</h2>
+    <h2 class="text-left">Settings</h2>
+           <p>Here you can manage your profile and notification subscriptions</p>
         <hr>
 
-       <form id="contact-form" method="post" action="/addaddexchanger">
-
-    <div class="messages"></div>
-
-    <div class="controls">
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="form_name">Name of the exchanger *</label>
-                    <input id="form_name" type="text" name="name" class="form-control" required="required">
+       <div class="row">
+           <div class="col-md-4">
+               <div class="card h-100 text-left card bg-light">
+                   <h5 class="card-header">Your profile</h5>
+                   <div class="card-body text-center">
+                       <img src="https://api.adorable.io/avatars/11" class="rounded-circle" style="max-height: 200px">
+                       <br><br><h3>Sasha</h3>
+                       <span style="font-size: 12px;">novoselovdmitrii@gmail.com</span>
+                       <br><br><a href="#" class="card-link" data-toggle="modal" data-target="#ChangePassword">Change password</a>
+                   </div>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="form_lastname">URL *</label>
-                    <input id="form_lastname" type="text" name="surname" class="form-control" required="required">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="form_email">XML rates page *</label>
-                    <input id="form_email" type="text" name="email" class="form-control" required="required">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="form_need">Country *</label>
-                    <input id="form_email" type="text" name="email" class="form-control" required="required">
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="form_message">Short description *</label>
-                    <textarea id="form_message" name="message" class="form-control" placeholder="Optionally, you can leave your comments here" rows="4" required="required" data-error="Please, leave us a message."></textarea>
-                    <div class="help-block with-errors"></div>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <input type="submit" class="btn btn-success btn-send" value="Submit">
-            </div>
-        </div>
-    </div>
+           </div>
 
-</form>
-
-</div>
-
+           <div class="col-md-8">
+               <div class="card h-100 text-left card bg-light">
+                   <h5 class="card-header">Notification subscriptions</h5>
+                   <div class="card-body text-center"></div>
+                </div>
+           </div>
+       </div>
 
        </div>
 
