@@ -33,11 +33,13 @@ db_path = os.path.join(os.path.dirname(__file__), 'users.db')
 exchangers_path = os.path.join(os.path.dirname(__file__), 'exchangers.db')
 comment_path = os.path.join(os.path.dirname(__file__), 'comment.db')
 rates_path = os.path.join(os.path.dirname(__file__), 'rates.db')
+subscriptions_path = os.path.join(os.path.dirname(__file__), 'subscriptions.db')
 db_uri = 'sqlite:///{}'.format(db_path)
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_BINDS'] = {'exchangers': 'sqlite:///{}'.format(exchangers_path),
                                   'comment': 'sqlite:///{}'.format(comment_path),
-                                  'rates': 'sqlite:///{}'.format(rates_path)}
+                                  'rates': 'sqlite:///{}'.format(rates_path),
+                                  'subscriptions': 'sqlite:///{}'.format(subscriptions_path)}
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = '2fHGGFdePK'
 
@@ -340,8 +342,8 @@ def settings():
 
         try:
             ratio = float(ratio)
-            if ratio <= 1:
-                flash('Ratio must be bigger than 1')
+            if ratio <= 0:
+                flash('Ratio must be bigger than 0')
                 return redirect(url_for('settings'))
             try:
                 uri = '/data?in=' + fCurr + '&out=' + sCurr
@@ -353,15 +355,15 @@ def settings():
                 if ratio > data['ratio']:
                     flash('Your ratio can not be bigger than the current one')
                     return redirect(url_for('settings'))
-                print(data['ratio'])
+
+
+
             except Exception as e:
                 flash('Some error occurred')
                 return redirect(url_for('settings'))
         except Exception as e:
             flash('Ratio input format is wrong!')
             return redirect(url_for('settings'))
-
-
     return render_template('settings.html', change_password_form=change_password_form)
 
 
@@ -411,7 +413,6 @@ def data():
             q = {'ratio': cf}
         except Exception as e:
             q = {'ratio': -1}
-
     return jsonify(q)
 
 

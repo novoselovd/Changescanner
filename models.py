@@ -17,6 +17,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(80))
     email_confirmed = db.Column(db.Boolean(), default=0)
     coms = db.relationship('Comment', backref='User', lazy='dynamic')
+    subscriptions = db.relationship('Subscriptions', backref='User', lazy='dynamic')
 
 
 class Exchangers(db.Model):
@@ -59,6 +60,13 @@ class Rates(UserMixin, db.Model):
     coef = db.Column(db.Float)
     exchangerId = db.Column(db.Integer, db.ForeignKey('exchangers.id'))
 
+
+class Subscriptions(UserMixin, db.Model):
+    __bind_key__ = 'subscriptions'
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(200))
+    coef = db.Column(db.Float)
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
 
