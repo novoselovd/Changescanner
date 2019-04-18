@@ -62,6 +62,7 @@ login_manager.login_view = 'login'
 import models
 import parser
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return models.User.query.get(int(user_id))
@@ -101,15 +102,38 @@ def update_data():
     except Exception as e:
         print(str(e))
 
+
+def notify():
+    subscriptions = models.Subscriptions.query.all()
+    for i in subscriptions:
+        try:
+            m = db.session.query(models.Rates).filter_by(type=i.type).order_by(models.Rates.coef).first().coef
+            if m <= i.coef:
+                email = db.session.query(models.User).filter_by(id=i.userId).first().email
+
+                msg = Message('Good news! Exchange is cheaper now!', sender='ouramazingapp@gmail.com', recipients=[email])
+                msg.html = str('Hello, now you can change {} to {} with the ratio of {}!'.format(i.giveCurr, i.getCurr, i.coef))
+                Thread(target=send_async_email, args=(app, msg)).start()
+
+                sub = db.session.query(models.Subscriptions).filter_by(id=i.id).first()
+                db.session.delete(sub)
+        except Exception as e:
+            print(str(e))
+    db.session.commit()
+
+
 # UPDATING RATES
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=parser.run, trigger="interval", seconds=300)
 # UPDATING DOLLAR RATES
-scheduler.add_job(func=update_data, trigger="interval", seconds=600)
+scheduler.add_job(func=update_data, trigger="interval", seconds=1200)
+# NOTIFIER
+scheduler.add_job(func=notify, trigger="interval", seconds=3600)
 scheduler.start()
 
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: scheduler.shutdown())
+
 
 # Login page
 @app.route('/login', methods=['GET', 'POST'])
@@ -258,6 +282,14 @@ def confirm_email(token):
     return render_template('confirm_email.html')
 
 
+# @app.before_request
+# def before_request():
+#     if request.url.startswith('http://'):
+#         url = request.url.replace('http://', 'https://', 1)
+#         code = 301
+#         return redirect(url, code=code)
+
+
 @app.route('/logout')
 def logout():
     if current_user.is_authenticated:
@@ -318,7 +350,16 @@ def search():
 @app.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
+    d = {'WMR': 'Webmoney RUB', 'QWRUB': 'Qiwi RUB', 'YAMRUB': 'Ynadex Money RUB', 'BTC': 'Bitcoin', 'SBERRUB': 'Sberbank RUB'}
+
     change_password_form = ChangePasswordForm()
+    subscriptions = db.session.query(models.Subscriptions).filter_by(userId=current_user.id)
+
+    anysubs = subscriptions.count()
+
+    if subscriptions:
+        subscriptions = subscriptions[::-1]
+
     if change_password_form.validate_on_submit():
         if check_password_hash(current_user.password, change_password_form.current_password.data) and (change_password_form.new_password.data == change_password_form.new_password_confirm.data):
             new_hashed_password = generate_password_hash(change_password_form.new_password.data, method='sha256')
@@ -356,15 +397,24 @@ def settings():
                     flash('Your ratio can not be bigger than the current one')
                     return redirect(url_for('settings'))
 
-
-
+                if db.session.query(models.Subscriptions).filter_by(userId=current_user.id).count() < 5:
+                    t = fCurr + sCurr
+                    sub = models.Subscriptions(type=t, giveCurr=d[fCurr], getCurr=d[sCurr], coef=ratio, userId=current_user.id)
+                    db.session.add(sub)
+                    db.session.commit()
+                    flash('Successfully added new subscription!')
+                    return redirect(url_for('settings'))
+                else:
+                    flash('You can not add more than 5 subscriptions')
+                    return redirect(url_for('settings'))
             except Exception as e:
                 flash('Some error occurred')
                 return redirect(url_for('settings'))
         except Exception as e:
             flash('Ratio input format is wrong!')
             return redirect(url_for('settings'))
-    return render_template('settings.html', change_password_form=change_password_form)
+    return render_template('settings.html', change_password_form=change_password_form,
+                           subscriptions=subscriptions, anysubs=anysubs)
 
 
 # @app.route('/test', methods=['GET', 'POST'])
@@ -414,6 +464,37 @@ def data():
         except Exception as e:
             q = {'ratio': -1}
     return jsonify(q)
+
+
+@app.route('/remove', methods=['GET', 'POST'])
+def remove():
+    try:
+        subId = int(request.args.get('id'))
+
+        reqSub = db.session.query(models.Subscriptions).filter_by(id=subId).first()
+        db.session.delete(reqSub)
+        db.session.commit()
+
+        return redirect('settings')
+    except Exception as e:
+        return redirect('settings')
+
+
+@app.route('/remove-comment', methods=['GET', 'POST'])
+def remove_comment():
+    try:
+        comId = int(request.args.get('q'))
+        uri = db.session.query(models.Comment).filter_by(id=comId).first().exchangerId
+        if current_user.id == db.session.query(models.Comment).filter_by(id=comId).first().userId:
+            id = db.session.query(models.Comment).filter_by(id=comId).first()
+            db.session.delete(id)
+            db.session.commit()
+
+        return redirect('exchanger/{}'.format(uri))
+    except Exception as e:
+        comId = int(request.args.get('q'))
+        uri = db.session.query(models.Comment).filter_by(id=comId).first().exchangerId
+        return redirect('exchanger/{}'.format(uri))
 
 
 if __name__ == '__main__':

@@ -147,4 +147,3 @@ def run():
             print(exch.name + ' => ' + str(e))
 
     db.session.commit()
-    print('Updated the rates!')

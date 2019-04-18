@@ -65,6 +65,8 @@ class Subscriptions(UserMixin, db.Model):
     __bind_key__ = 'subscriptions'
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String(200))
+    giveCurr = db.Column(db.String(200))
+    getCurr = db.Column(db.String(200))
     coef = db.Column(db.Float)
     userId = db.Column(db.Integer, db.ForeignKey('user.id'))
 

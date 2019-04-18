@@ -153,7 +153,7 @@
                                                   <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
                                                 </div>
                                                 <div class="commentText">
-                                                    <p class=""><b>★ {{ i.userName }}</b>: {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+                                                    <p class=""><b>★ {{ i.userName }}</b>: {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }} {% if current_user.id == i.userId %}<a href="#" id={{ i.id }} data-toggle="modal" data-target="#remove" class="card-link" onClick="reply_click(this.id)">remove</a>  {% endif %}</span>
 
                                                 </div>
                                             </li>
@@ -164,7 +164,7 @@
                                                       <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
                                                     </div>
                                                     <div class="commentText">
-                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }} {% if current_user.id == i.userId %}<a href="#" id={{ i.id }} data-toggle="modal" data-target="#remove" class="card-link" onClick="reply_click(this.id)">remove</a>{% endif %}</span>
 
                                                     </div>
                                                 </li>
@@ -174,7 +174,7 @@
                                                       <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
                                                     </div>
                                                     <div class="commentText">
-                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }} {% if current_user.id == i.userId %}<a href="#" id={{ i.id }} data-toggle="modal" data-target="#remove" class="card-link" onClick="reply_click(this.id)">remove</a>{% endif %}</span>
 
                                                     </div>
                                                 </li>
@@ -184,8 +184,8 @@
                                                       <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
                                                     </div>
                                                     <div class="commentText">
-                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
-
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}
+                                                        {% if current_user.id == i.userId %}<a href="#" id={{ i.id }} data-toggle="modal" data-target="#remove" class="card-link" onClick="reply_click(this.id)">remove</a> {% endif %}</span>
                                                     </div>
                                                 </li>
                                             {% endif %}
@@ -210,7 +210,7 @@
                                                   <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
                                                 </div>
                                                 <div class="commentText">
-                                                    <p class=""><b>★ {{ i.userName }}</b>: {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+                                                    <p class=""><b>★ {{ i.userName }}</b>: {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }} {% if current_user.id == i.userId %}<a href="#" id={{ i.id }} data-toggle="modal" data-target="#remove" class="card-link" onClick="reply_click(this.id)">remove</a>{% endif %}</span>
 
                                                 </div>
                                             </li>
@@ -221,7 +221,7 @@
                                                       <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
                                                     </div>
                                                     <div class="commentText">
-                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }} {% if current_user.id == i.userId %}<a href="#" id={{ i.id }} data-toggle="modal" data-target="#remove" class="card-link" onClick="reply_click(this.id)">remove</a>{% endif %}</span>
 
                                                     </div>
                                                 </li>
@@ -231,7 +231,7 @@
                                                       <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
                                                     </div>
                                                     <div class="commentText">
-                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }} {% if current_user.id == i.userId %}<a href="#" id={{ i.id }} data-toggle="modal" data-target="#remove" class="card-link" onClick="reply_click(this.id)">remove</a>{% endif %}</span>
 
                                                     </div>
                                                 </li>
@@ -241,7 +241,7 @@
                                                       <img src="https://api.adorable.io/avatars/{{ i.userId }}" />
                                                     </div>
                                                     <div class="commentText">
-                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }}</span>
+                                                        <p class=""><b>{{ i.userName }}:</b> {{ i.review }}</p> <span class="date sub-text">{{ i.commentTime }} {% if current_user.id == i.userId %}<a href="#" id={{ i.id }} data-toggle="modal" data-target="#remove" class="card-link" onClick="reply_click(this.id)">remove</a>{% endif %}</span>
 
                                                     </div>
                                                 </li>
@@ -347,8 +347,38 @@
         </div>
 
     </div>
-    </div>
 </div>
 
+<div id="remove" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-dialog-centered">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Remove comment</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+        <form align = "left" id="remove-form" method="POST" action="">
+      <div class="modal-body">
+{#            <input type="hidden" name="row_id" id="data-pass" value="test" />#}
+            <p>Are you sure that you want to delete the comment?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-danger">Remove</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+      </div>
+        </form>
+    </div>
+  </div>
+</div>
 
+{% endblock %}
+
+{% block scriptBlock %}
+    <script>
+        function reply_click(clicked_id)
+        {
+            var e = document.getElementById("remove-form");
+            e.action = "/remove-comment?q=" + clicked_id;
+        }
+    </script>
 {% endblock %}
