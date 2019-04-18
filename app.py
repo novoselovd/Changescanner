@@ -487,11 +487,22 @@ def remove_comment():
         uri = db.session.query(models.Comment).filter_by(id=comId).first().exchangerId
         if current_user.id == db.session.query(models.Comment).filter_by(id=comId).first().userId:
             id = db.session.query(models.Comment).filter_by(id=comId).first()
+
+            if id.type == 'Positive':
+                db.session.query(models.Exchangers).filter_by(id=id.exchangerId).first().positives = \
+                    db.session.query(models.Exchangers).filter_by(id=id.exchangerId).first().positives - 1
+            elif id.type == 'Complain':
+                db.session.query(models.Exchangers).filter_by(id=id.exchangerId).first().complains = \
+                    db.session.query(models.Exchangers).filter_by(id=id.exchangerId).first().complains - 1
+            else:
+                db.session.query(models.Exchangers).filter_by(id=id.exchangerId).first().comments = \
+                    db.session.query(models.Exchangers).filter_by(id=id.exchangerId).first().comments - 1
             db.session.delete(id)
             db.session.commit()
 
         return redirect('exchanger/{}'.format(uri))
     except Exception as e:
+        print(str(e))
         comId = int(request.args.get('q'))
         uri = db.session.query(models.Comment).filter_by(id=comId).first().exchangerId
         return redirect('exchanger/{}'.format(uri))
